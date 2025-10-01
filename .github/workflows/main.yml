@@ -26,16 +26,16 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build Docker image
-        run: docker build -t tsvetilen-app .
+        run: docker build -t yordan-app .
 
       - name: Tag Docker image
-        run: docker tag tsvetilen-app:latest ${{ steps.login-ecr.outputs.registry }}/tsvetilen-app-repo:latest
+        run: docker tag yordan-app:latest ${{ steps.login-ecr.outputs.registry }}/yordan-app-repo:latest
 
       - name: Push Docker image to ECR
-        run: docker push ${{ steps.login-ecr.outputs.registry }}/tsvetilen-app-repo:latest
+        run: docker push ${{ steps.login-ecr.outputs.registry }}/yordan-app-repo:latest
 
       - name: Download task definition
-        run: aws ecs describe-task-definition --task-definition tsvetilen-app-task --query taskDefinition > task-definition.json
+        run: aws ecs describe-task-definition --task-definition yordan-app-task --query taskDefinition > task-definition.json
 
       - name: Render ECS task definition
         id: task-def
@@ -43,11 +43,11 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: web-app
-          image: ${{ steps.login-ecr.outputs.registry }}/tsvetilen-app-repo:latest
+          image: ${{ steps.login-ecr.outputs.registry }}/yordan-app-repo:latest
 
       - name: Deploy to ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: tsvetilen-app-service
-          cluster: tsvetilen-ecs-cluster
+          service: yordan-app-service
+          cluster: yordan-ecs-cluster
