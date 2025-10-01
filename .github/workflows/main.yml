@@ -29,10 +29,10 @@ jobs:
         run: docker build -t yordan-app .
 
       - name: Tag Docker image
-        run: docker tag yordan-app:latest ${{ steps.login-ecr.outputs.registry }}/yordan-app-repo:latest
+        run: docker tag yordan-app:latest ${{ steps.login-ecr.outputs.registry }}/yordan-app:latest
 
       - name: Push Docker image to ECR
-        run: docker push ${{ steps.login-ecr.outputs.registry }}/yordan-app-repo:latest
+        run: docker push ${{ steps.login-ecr.outputs.registry }}/yordan-app:latest
 
       - name: Download task definition
         run: aws ecs describe-task-definition --task-definition yordan-app-task --query taskDefinition > task-definition.json
@@ -43,7 +43,7 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: web-app
-          image: ${{ steps.login-ecr.outputs.registry }}/yordan-app-repo:latest
+          image: ${{ steps.login-ecr.outputs.registry }}/yordan-app:latest
 
       - name: Deploy to ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
