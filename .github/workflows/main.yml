@@ -50,4 +50,4 @@ jobs:
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: yordan-app-service
-          cluster: yordan-ecs-cluster
+          cluster: yordan-app-cluster
