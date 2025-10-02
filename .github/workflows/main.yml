@@ -26,7 +26,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build Docker image
-        run: docker build -t yordan-app .
+        run: docker build -t yordan-app -f ci-cd-cs1/Dockerfile ci-cd-cs1
 
       - name: Tag Docker image
         run: docker tag yordan-app:latest ${{ steps.login-ecr.outputs.registry }}/yordan-app:latest
