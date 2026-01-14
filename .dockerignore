@@ -1,0 +1,13 @@
+.git/
+.github/
+**/.terraform/
+*.tfstate
+*.tfstate.*
+terraform.tfstate*
+terraform/.terraform/
+terraform/terraform.exe
+*.md
+*.log
+*.zip
+*.tar
+*.tar.gz 

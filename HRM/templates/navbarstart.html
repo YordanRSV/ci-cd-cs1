@@ -1,0 +1,13 @@
+{% macro navbar(classes) %}
+<nav class="{{classes}}">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-center items-center space-x-4">
+            {% from 'btn.html' import btn %}
+            {{ btn('/employees', 'Employees', 'min-w-[200px] bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-8 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 text-center') }}
+            {{ btn('/groups', 'Groups', 'min-w-[200px] bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-8 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 text-center') }}
+            {{ btn('/logout', 'Logout', 'min-w-[200px] bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-8 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 text-center') }}
+
+        </div>
+    </div>
+</nav>
+{% endmacro %}

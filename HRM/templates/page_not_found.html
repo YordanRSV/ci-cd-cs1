@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Page Not Found - Fonteyn Holiday Parks</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    {% from 'navbarstart.html' import navbar %}
+    {{ navbar('bg-white shadow-md p-4 mb-8') }}
+    {% include 'navbarend.html' %}
+
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-6xl font-bold text-blue-600 mb-6">404</h1>
+        <p class="text-2xl font-semibold text-gray-800 mb-4">Oops! Page not found.</p>
+        <p class="text-gray-600 mb-8">The page you're looking for doesn't exist or has been moved.</p>
+        <a href="{{ url_for('index') }}"
+           class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transition-all duration-300 inline-block">
+            Go Back Home
+        </a>
+    </div>
+</body>
+</html>

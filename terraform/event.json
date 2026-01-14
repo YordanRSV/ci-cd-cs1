@@ -1,0 +1,9 @@
+{
+  "Records": [
+    {
+      "Sns": {
+        "Message": "{\"source\":\"web-server\",\"type\":\"unauthorized-access\",\"severity\":\"high\"}"
+      }
+    }
+  ]
+}

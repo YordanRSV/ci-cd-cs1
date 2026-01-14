@@ -1,0 +1,16 @@
+{% macro form(url, headings, formClasses, inputClasses, submitClasses, passfields=[]) %}
+<form action= "{{url}}" class="{{ formClasses }} p-8 space-y-6" method="post">
+    {% for heading in headings %}
+    {% if passfields is not none and (loop.index0 == passfields[0] or loop.index0 == passfields[1]) %}
+        {% set type = "password" %}
+    {% else %}
+        {% set type = "text" %}
+    {% endif %}
+        <div>
+            <label class="block text-gray-700 text-sm font-semibold mb-2" for="{{ heading }}">{{ heading }}</label>
+            <input type="{{ type }}" name="{{ heading }}" id="{{ heading }}" class="{{ inputClasses }} w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="{{ heading }}" required>
+        </div>
+    {% endfor %}
+    <button type="submit" class="{{ submitClasses }} w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-all duration-300">Submit</button>
+</form>
+{% endmacro %}

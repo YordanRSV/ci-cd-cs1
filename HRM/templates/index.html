@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Fonteyn Holiday Parks</title>
+		<link rel="icon" type="image/x-icon" href="{{url_for('static', filename='images/favicon.ico')}}">
+		<script src="https://cdn.tailwindcss.com"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	</head>
+	<body class="bg-gray-50 min-h-screen">
+		{% from 'navbarstart.html' import navbar %}
+		{% from 'btn.html' import btn %}
+        	
+		{{ navbar('bg-white shadow-md p-4 mb-8') }}
+		
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<h1 class="text-4xl font-bold text-center text-gray-800 mb-12">Fonteyn HRM</h1>
+			<div class="flex justify-center mb-8">
+				{{ btn('/add_' + addname, 'Add Information', 'bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transition-all duration-300') }}
+			</div>
+
+			{% from 'table.html' import table %}
+			<div class="overflow-x-auto">
+				{{ table(
+					headers,
+					rows,
+					"table-fixed w-full mx-auto bg-white shadow-md rounded-lg overflow-hidden",
+					"border-b border-gray-200 hover:bg-gray-50",
+					"pl-6 pr-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:bg-gray-100",
+					"pl-6 pr-6 py-4 whitespace-nowrap text-sm text-gray-900 col-shrink max-w-[220px] overflow-hidden text-ellipsis",
+					"",
+					delete_column
+				) }}
+			</div>
+		</div>
+
+		<script>
+      function toggleColumn(colIndex) {
+		const table = document.getElementById('mytable');
+		const expandClass = 'expand-' + colIndex;
+		const isExpanding = !table.classList.contains(expandClass);
+
+		// Remove all expand- classes and reset table layout
+		table.classList.remove('table-auto');
+		table.classList.add('table-fixed');
+		for (let i = 0; i < table.rows[0].cells.length; i++) {
+			table.classList.remove('expand-' + i);
+		}
+
+		if (isExpanding) {
+			table.classList.remove('table-fixed');
+			table.classList.add('table-auto');
+			table.classList.add(expandClass);
+		}
+		}
+
+    </script>
+
+		{% include 'navbarend.html' %}
+		
+
+	</body>
+</html>

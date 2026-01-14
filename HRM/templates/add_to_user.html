@@ -1,0 +1,14 @@
+{% macro add_to_user(url, id, headings_no_link, headings_link, formClasses, lableClasses, inputClasses, submitClasses) %}
+<form action= "{{url}}{{id}}"class="{{ formClasses }}" method="post">
+    
+    {% for heading in headings_no_link %}
+        <input type="checkbox" name="group_ids" value="{{heading[0]}}" class="{{ inputClasses }}">
+        <label for="{{ heading[1] }}" class="lableClasses">{{ heading[1] }}</label>
+    {% endfor %}
+    {% for heading in headings_link %}
+        <input type="checkbox" name="group_ids" value="{{heading[0]}}" class="{{ inputClasses }}"  checked>
+        <label for="{{ heading[1] }}" class="lableClasses">{{ heading[1] }}</label>
+    {% endfor %}
+    <button type="submit" class="{{ submitClasses }}">Submit</button>
+</form>
+{% endmacro %}

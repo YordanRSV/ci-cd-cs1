@@ -1,0 +1,95 @@
+SOAR integration session — saved conversation summary
+Date: 2025-11-11
+
+Summary
+-------
+This file records the steps we did to wire your SOAR SNS/Lambda flow, patches applied to Terraform, troubleshooting tips, and commands to test end-to-end.
+
+Files inspected/edited
+---------------------
+- terraform/soar.tf (edited)
+  - Added two CloudWatch alarms that publish to the existing SNS topic `soar-alerts`:
+    - aws_cloudwatch_metric_alarm.alb_5xx
+    - aws_cloudwatch_metric_alarm.rds_low_storage
+  - Changed Lambda environment variable key from `SNS_TOPIC_ARN` to `SNS_TOPIC` so the Python code in `soar.py` can read the ARN.
+- terraform/soar.py (inspected)
+- terraform/soar.zip (was present in folder at time of check)
+
+Actions taken
+-------------
+1. Added two CloudWatch alarms in `terraform/soar.tf` to publish to the `soar-alerts` SNS topic. These will trigger the SOAR Lambda when the ALB 5xx count or RDS free storage thresholds are crossed.
+2. Fixed environment variable mismatch by changing the Terraform environment variable key to `SNS_TOPIC` (so `soar.py` which expects `SNS_TOPIC` will see the topic ARN).
+3. Verified `soar.zip` existed in the `terraform/` folder; ensured the zip must contain `soar.py` at archive root for the handler to work.
+
+Local developer notes & commands
+-------------------------------
+Create `soar.zip` (PowerShell) - put `soar.py` at zip root:
+
+Compress-Archive -Path .\soar.py -DestinationPath .\soar.zip -Force
+
+Check contents of zip (PowerShell):
+
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+[System.IO.Compression.ZipFile]::OpenRead((Resolve-Path .\soar.zip)).Entries | Select-Object -ExpandProperty Name
+
+Optional extract to inspect:
+
+Expand-Archive -Path .\soar.zip -DestinationPath .\tmp_soar -Force
+Get-ChildItem .\tmp_soar
+Remove-Item -Recurse .\tmp_soar
+
+Terraform apply (after ensuring zip present or using archive provider):
+
+terraform init
+terraform apply
+
+Publish a test SNS message (PowerShell) - replace ACCOUNT_ID with your account or use automatic discovery:
+
+# Discover the topic ARN and publish
+$topics = aws sns list-topics --region eu-central-1 | ConvertFrom-Json
+$topicArn = ($topics.Topics | Where-Object { $_.TopicArn -like '*:soar-alerts' } | Select-Object -ExpandProperty TopicArn)
+$topicArn
+aws sns publish --topic-arn $topicArn --message '{"source":"test","type":"manual-test","severity":"low"}' --region eu-central-1
+
+Check SNS subscriptions for the topic:
+
+aws sns list-subscriptions-by-topic --topic-arn $topicArn --region eu-central-1 | ConvertFrom-Json
+
+Check the Lambda CloudWatch logs:
+
+aws logs filter-log-events --log-group-name '/aws/lambda/soar-orchestrator' --limit 50 --region eu-central-1
+
+Troubleshooting notes
+---------------------
+- Error "reading ZIP file (soar.zip): open soar.zip: The system cannot find the file specified." indicates Terraform couldn't find the referenced `soar.zip`. Create the zip first or use Terraform's `archive_file` data source to create it automatically.
+- The Python code expected environment variable `SNS_TOPIC`; Terraform previously set `SNS_TOPIC_ARN`. We changed Terraform to set `SNS_TOPIC` so code will pick it up. Alternatively change `soar.py` to read `SNS_TOPIC_ARN`.
+- If SNS publish fails with "could not connect to the endpoint URL: https://sns.eu-central.amazonaws.com/", ensure your CLI region is set to `eu-central-1` (not `eu-central`) and network/proxy settings allow HTTPS to AWS endpoints.
+- If you see an "Invalid parameter: TopicArn" error and the CLI shows a long encoded token (IQoJ...), you likely passed the AWS session token or other wrong value as the TopicArn; use `aws sns list-topics` to fetch and copy the correct ARN.
+- SES behavior: your Lambda uses SES to send emails. If SES is in sandbox mode you must verify both the source and destination addresses in SES or move out of sandbox.
+
+Optional improvement (recommended)
+---------------------------------
+Add Terraform `archive` provider and `data "archive_file"` to build `soar.zip` automatically:
+
+data "archive_file" "soar_zip" {
+  type        = "zip"
+  source_file = "${path.module}/soar.py"
+  output_path = "${path.module}/soar.zip"
+}
+
+Set lambda `filename = data.archive_file.soar_zip.output_path` so the zip is generated during `terraform apply`.
+
+Session actions summary (what I changed in the repo during this session)
+------------------------------------------------------------------------
+- Edited: terraform/soar.tf
+  - Added CloudWatch alarms resources
+  - Changed environment variable key to SNS_TOPIC
+
+Where this file was saved
+------------------------
+Saved conversation summary to:
+  c:\Users\yorda\OneDrive\Documents\semester3New\ci-cd-cs1\soar_conversation_2025-11-11.txt
+
+If you want the raw conversation transcript instead of this summarized file, I can create one (but it may contain sensitive info). Let me know.
+
+End of saved summary.

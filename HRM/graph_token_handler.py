@@ -1,0 +1,1 @@
+raise ImportError("Azure/MSAL integration removed. Use Okta via okta_handler.py and set OKTA_DOMAIN and OKTA_API_TOKEN in environment.")

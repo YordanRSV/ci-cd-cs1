@@ -1,0 +1,21 @@
+
+/* Expanded columns */
+.expand-0 .col-0,
+.expand-1 .col-1,
+.expand-2 .col-2,
+.expand-3 .col-3,
+.expand-4 .col-4 {
+max-width: none !important;
+overflow: visible !important;
+text-overflow: initial !important;
+white-space: normal !important;
+}
+
+.expand-2 .col-2 {
+  max-width: none !important;
+  overflow: visible !important;
+  white-space: normal !important;
+  position: relative;
+  z-index: 50;
+  background: white;
+}

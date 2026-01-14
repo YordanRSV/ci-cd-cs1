@@ -1,0 +1,1 @@
+raise ImportError("Azure/Entra code removed. Use Okta via okta_handler.py and set OKTA_DOMAIN and OKTA_API_TOKEN in environment.")

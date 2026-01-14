@@ -1,0 +1,44 @@
+{% macro table(headings, records, tableClasses, trClasses, thClasses, tdClasses, delBtnClassess, delete_column) %}
+  <table id="mytable" class="{{ tableClasses }}">
+    <tr class="{{ trClasses }}">
+      {% for heading in headings %}
+        {% if loop.index0 == delete_column %}
+          <th class="{{ thClasses }} sticky right-0 z-10 bg-white text-right w-24 col-{{ loop.index0 }}">
+            {{ heading }}
+          </th>
+        {% else %}
+          <th class="{{ thClasses }} col-{{ loop.index0 }}" onclick="toggleColumn({{ loop.index0 }})">
+            {{ heading }}
+          </th>
+        {% endif %}
+      {% endfor %}
+    </tr>
+    {% for data in records %}
+      <tr class="{{ trClasses }}">
+        {% for datum in data %}
+          {% if loop.index0 == delete_column %}
+            <td class="{{ tdClasses }} sticky right-0 z-10 bg-white text-right w-24 col-{{ loop.index0 }}">
+              <button class="{{ delBtnClassess }}" onclick="location.href='{{ datum }}'">Delete</button>
+            </td>
+          {% elif loop.index0 == 0 %}
+            <td class="{{ tdClasses }} min-w-[160px] col-{{ loop.index0 }}" title="{{ datum }}">
+              {{ datum }}
+            </td>
+          {% elif loop.index0 == 2 and datum is iterable and not datum is string %}
+            <td class="{{ tdClasses }} col-{{ loop.index0 }}" title="{{ datum | join(', ') }}">
+              {{ datum | join(', ') }}
+            </td>
+			{% elif loop.index0 == 4 and datum is iterable and not datum is string %}
+  			<td class="{{ tdClasses }} col-{{ loop.index0 }}" title="{{ datum | join(', ') }}">
+   				 {{ datum | join(', ') }}
+ 			 </td>
+          {% else %}
+            <td class="{{ tdClasses }} col-{{ loop.index0 }}" title="{{ datum }}">
+              {{ datum }}
+            </td>
+          {% endif %}
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </table>
+{% endmacro %}

@@ -1,0 +1,12 @@
+FROM prom/prometheus:lates
+
+COPY prometheus.yml /etc/prometheus/prometheus.yml
+
+EXPOSE 9090
+
+CMD ["--config.file=/etc/prometheus/prometheus.yml", \
+     "--storage.tsdb.path=/prometheus", \
+     "--web.console.libraries=/usr/share/prometheus/console_libraries", \
+     "--web.console.templates=/usr/share/prometheus/consoles", \
+     "--web.listen-address=0.0.0.0:9090", \
+     "--web.external-url=http://app-alb-326837333.eu-central-1.elb.amazonaws.com/prometheus"]

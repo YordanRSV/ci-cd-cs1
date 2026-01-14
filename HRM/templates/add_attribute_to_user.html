@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Fonteyn Holiday Parks</title>
+		<link rel="icon" type="image/x-icon" href="{{url_for('static', filename='images/favicon.ico')}}">
+		<script src="https://cdn.tailwindcss.com"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+	<body class="bg-gray-50 min-h-screen">
+		{% from 'navbarstart.html' import navbar %}
+        	
+		{{ navbar('bg-white shadow-md p-4 mb-8') }}
+		
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<h1 class="text-4xl font-bold text-center text-gray-800 mb-12">Fonteyn HRM</h1>
+
+			{% from 'add_to_user.html' import add_to_user %}
+			{% from 'btn.html' import btn %}
+			<!--- The table() function accepts 6 arguments. Array for the headers, array of arrays for the data in the table
+				classes for the table, table row (<tr>), table header(<th>), and table data (<td>)--->
+			{{ add_to_user(
+                url,
+                id,
+			    headings_no_link,
+                headings_link,
+				"min-w-full bg-white shadow-md rounded-lg overflow-hidden",
+				"border-b border-gray-200 hover:bg-gray-50",
+				"px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+			) }}
+		</div>
+
+		{% include 'navbarend.html' %}
+		
+
+	</body>
+</html>
+
